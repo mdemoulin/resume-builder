@@ -1,0 +1,7 @@
+# build products
+/out/
+/tmp/
+/federal/
+# per-checkout settings; the first build writes the defaults
+/lib/params
+*.bak

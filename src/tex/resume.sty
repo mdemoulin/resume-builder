@@ -1,0 +1,246 @@
+% resume.sty
+% Copyright (C) 2026 Michael A. Demoulin
+% SPDX-License-Identifier: GPL-3.0-or-later
+
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage{fancyhdr}
+% T1 is what makes \familydefault{cmss} below render as real type.  In the
+% default OT1 encoding the only Computer Modern Sans available is Metafont
+% source, which needs mf to turn into bitmaps; without it dvips silently
+% substitutes cmr10 and embeds unusable Type 3 glyphs, and pdflatex just dies.
+% T1 routes the same faces to cm-super's Type 1 outlines (metrics: texlive-ec,
+% outlines: texlive-cm-super -- both required).
+\usepackage[T1]{fontenc}
+\usepackage{params}
+
+% Pin the paper size in the dvi itself.  Nothing else here states it, so each
+% driver falls back to whatever its own config was built with -- a4 on the
+% Fedora box, letter on the Windows one -- and one dvi comes out two sizes.
+% dvips and dvipdfmx both honor this special, so the lengths below are
+% measured against a page that really is 8.5x11 on either machine.
+\special{papersize=8.5in,11in}
+
+\setlength{\hoffset}{0.05in}
+\setlength{\voffset}{-0.3in}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+% 0.15in, not the 0.5in this used to be.  TeX starts 1in down, \voffset
+% takes 0.3in back, then topmargin, headheight (0.5in) and headsep (0.25in)
+% put the body top at 1.55in; \textheight 9in ends it at 10.55in and
+% \footskip 0.25in puts the footer baseline at 10.8in.  At 0.5in that sum
+% came to 11.2in on an 11in page, so \cfoot's "- continued -" was written
+% off the bottom edge and never appeared, though it is there in the dvi.
+% \textheight is untouched, so the pagination does not move.
+\setlength{\topmargin}{0.15in}
+\setlength{\marginparsep}{0pt}
+\setlength{\marginparwidth}{0pt}
+\setlength{\textwidth}{6.5in}
+% The federal build runs to a third page at 1in margins, and USAJOBS caps
+% resumes at two (2026).  Its own layout advice is 0.5in margins, so the
+% federal copy takes them on all four sides; the industry copy keeps the 1in
+% it has always had.  Content cuts for the cap are in the XML, attribute
+% federal="0".  Sides here; top and height below, inside the fancyheaders
+% branch, because that is where the header dimensions they depend on live.
+\ifthenelse{\boolean{@federal}}{%
+    \setlength{\oddsidemargin}{-0.5in}%
+    \setlength{\evensidemargin}{-0.5in}%
+    \setlength{\textwidth}{7.5in}%
+    }{}%
+\ifthenelse{\boolean{@fancyheaders}}{%
+    \setlength{\textheight}{9in}%
+	\ifthenelse{\boolean{@twophones}}{%
+		\setlength{\headheight}{.75in}%
+		}%
+	{%
+		\setlength{\headheight}{.5in}%
+		}%
+	\setlength{\headsep}{.25in}%
+	\setlength{\footskip}{.25in}%
+	% federal: header top at 0.5in (1in - 0.65in + 0.15in), body top at
+	% 1.2in, 9.5in of body ends at 10.7in, footer baseline at 10.95in.
+	\ifthenelse{\boolean{@federal}}{%
+		\setlength{\voffset}{-0.65in}%
+		\setlength{\headsep}{.2in}%
+		\setlength{\textheight}{9.5in}%
+		}{}%
+	\pagestyle{fancyplain}%
+	}%
+{%
+	\setlength{\textheight}{10in}%
+	\setlength{\headheight}{0pt}%
+	\setlength{\headsep}{0pt}%
+	\pagestyle{empty}%
+	}
+
+\renewcommand{\familydefault}{cmss}
+
+% LaTeX builds its own logo as "L\kern-.36em A", a kern measured against the
+% roman L of cmr10, which is 0.68em wide.  The cmss L selected just above is
+% only 0.54em, so that fixed kern drops the raised A onto the L's stem and the
+% logo reads LTEX.  Derive the kern from whatever L is current instead: 0.35 of
+% its width puts the A in the notch at every size and weight.
+\newlength{\@Lwidth}
+\DeclareRobustCommand{\LaTeX}{%
+	{%
+		\settowidth{\@Lwidth}{L}%
+		L\kern-0.35\@Lwidth%
+		{\sbox\z@ T%
+			\vbox to\ht\z@{%
+				\hbox{\check@mathfonts
+					\fontsize\sf@size\z@
+					\math@fontsfalse\selectfont A}%
+				\vss}%
+			}%
+		\kern-.15em%
+		\TeX
+		}%
+	}
+
+% use font size 10-14 for text, 13-16 for headings
+
+\newcommand{\kbd}[1]{%
+	\texttt{#1}%
+	}
+% a host name is something you type, so it reads like a command; kept
+% separate so the two can diverge without touching the source
+\newcommand{\server}[1]{%
+	\kbd{#1}%
+	}
+\newcommand{\Program}[1]{%
+	\textbf{#1}%
+	}
+\newcommand{\@Center}[1]{%
+	\begin{center}#1\end{center}%
+	}
+\newcommand{\@simplesection}[1]{{\Large\textbf{ #1 }}}
+\newcommand{\@sectiondecoration}[1]{\rule[1ex]{#1}{0.03pt}}
+\newlength{\@sectiondecorationlength}
+\newenvironment{Section}[1]{%
+	\ifthenelse{\boolean{@fancyheadings}}{%
+		\settowidth{\@sectiondecorationlength}{\@simplesection{#1}}%
+		\setlength{\@sectiondecorationlength}{(\textwidth-\@sectiondecorationlength)/2}%
+		\noindent%
+		\@sectiondecoration{\@sectiondecorationlength}%
+		\@simplesection{#1}%
+		\@sectiondecoration{\@sectiondecorationlength}%
+		}%
+	{%
+		\@Center{\Large{\textbf{#1}}}%
+		}%
+	}%
+{%
+	}
+% A subsection used to be one minipage, heading and body together, so a job
+% could never split across pages.  That kept jobs tidy but meant a seven-line
+% job facing three free lines jumped whole, taking the federal build to a
+% third page.  Now only the heading is boxed; the body may break, subject to
+% \@needspace before the heading (room for the heading and a few lines, or
+% break early), \nopagebreak after it, and the club/widow penalties below.
+% \@needspace is the needspace package's trick, inlined because the package
+% is not installed here: the skip runs off the page bottom when the room is
+% not there, forcing the break at the preceding penalty, then is taken back.
+\newcommand{\@needspace}[1]{%
+	\par\penalty-100%
+	\begingroup\vskip #1\penalty9999\vskip -#1\endgroup%
+	}
+\clubpenalty=10000
+\widowpenalty=10000
+% inside the old minipage nothing was ever indented; keep it that way now
+% that the body is ordinary paragraphs
+\setlength{\parindent}{0pt}
+\newenvironment{Subsection}[1]{% title
+	\@needspace{6\baselineskip}%
+	\vspace{2ex}%
+	\par%
+	\noindent%
+	\begin{minipage}{\textwidth}%
+	\@Center{\large{\textbf{{#1}}}}%
+	\end{minipage}%
+	\nopagebreak\par\nopagebreak%
+	}%
+{%
+	}
+\newenvironment{Jobsection}[3]{% title, company, dates
+	\begin{Subsection}{#1\\#2\hfill#3}%
+	}%
+{%
+	\end{Subsection}%
+	}
+\newcommand{\Extra}[1]{%
+	\ifthenelse{\boolean{@extra}}{%
+		#1%
+		}%
+	{%
+		}%
+	}
+% \acronym and \cpp end in \xspace, which puts a space before any token it
+% does not recognise as punctuation -- and \Extra is such a token.  With
+% @extra off that left "XML ." and "LDAP ," in the skills paragraph.  Telling
+% xspace to look through \Extra means an inline extra must carry its own
+% leading space or punctuation, which every one in resume.xml already does.
+\xspaceaddexceptions{\Extra}
+% the supervisor/hours block a federal resume needs and an industry one
+% must not show; whether it is emitted at all is decided in the XSL
+\newcommand{\JobFacts}[1]{%
+	{\small #1\par}\nopagebreak%
+	}
+\newcommand{\cpp}{%
+	{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++}}\xspace%
+	}
+\newcommand{\abbrev}[2]{%
+	\ifthenelse{\boolean{@expandabbrevs}}{%
+		\acronym{#1} (#2)%
+		}%
+	{%
+		\acronym{#1}%
+		}%
+	}
+\newcommand{\acronym}[1]{%
+	\ifthenelse{\boolean{@fancyacronyms}}{%
+		{\small #1}\xspace%
+		}%
+	{%
+		#1\xspace%
+		}%
+	}
+\newcommand{\Heading}[6]{% name, addr1, addr2, email, home phone, cell phone
+	\ifthenelse{\boolean{@fancyheaders}}{%
+		\newcommand{\@addr}{\bfseries#2\\#3}%
+		\ifthenelse{\boolean{@twophones}}{%
+			\newcommand{\@phones}{\bfseries Home: #5\\Cell: #6}%
+			\newcommand{\@centerheader}{\bfseries{\Large#1}\\#4}%
+			}%
+		{%
+			\newcommand{\@phones}{\bfseries #5\\#4}%
+			\newcommand{\@centerheader}{\bfseries{\Large#1}}%
+			}%
+		\lhead{\fancyplain{\@addr}{\@addr}}%
+		\chead{\fancyplain{\@centerheader\\\footnotesize}{{\@centerheader}\\\footnotesize page \arabic{page}}}%
+		\rhead{\fancyplain{\@phones}{\@phones}}%
+		\cfoot{\fancyplain{\footnotesize- continued -}{}}%
+		% a resume that ends on its first page has nothing to continue to:
+		% clear the footer before that page is shipped out at \end{document}
+		\AtEndDocument{\cfoot{}}%
+		% fancyhdr declares this with \newcommand, not \newlength, so it
+		% takes \renewcommand -- \setlength wants a length register and
+		% fails with "Missing number, treated as zero"
+		\renewcommand{\plainheadrulewidth}{0.4pt}%
+		\thispagestyle{plain}%
+		}%
+	{%
+		{%
+			\bfseries%
+			\@Center{\Large{#1}}%%
+			%\colorbox{black}{\color{white}{\@Center{\Large{#1}}}}%%
+			\ifthenelse{\boolean{@twophones}}{%
+				#2\hfill#4\hfill{}Home: #5\\%
+				#3\hfill{}Cell: #6\\%
+				}%
+			{%
+				#2\hfill#5\\%%
+				#3\hfill{}#4\\%%
+				}%
+			}%
+		}%
+	}

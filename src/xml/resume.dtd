@@ -1,0 +1,67 @@
+<!-- Copyright (C) 2026 Michael A. Demoulin
+     SPDX-License-Identifier: GPL-3.0-or-later -->
+<!ELEMENT resume                (author, section+)>
+<!ELEMENT author                (name, address, email+, phone+)>
+<!ELEMENT section               (heading, ((jobsubsection+) | (subsection+) | (description)+))>
+<!-- federal: 1 = only in the federal build, 0 = only in the industry build,
+     absent = both.  Independent of extra; a block can carry both. -->
+<!ATTLIST section              federal (0|1) #IMPLIED>
+<!ELEMENT name                  (#PCDATA)>
+<!-- street? and zip? because neither is on the resume any more: city and
+     state are what an employer filters on, and the rest is what a resume
+     sitting behind a link should not be handing out.  Optional rather than
+     gone so the markup still describes an address if one is ever wanted. -->
+<!ELEMENT address               (street?, city, state, zip?)>
+<!ELEMENT email                 (#PCDATA)>
+<!ELEMENT phone                 (type, number)>
+<!ELEMENT street                (#PCDATA)>
+<!ELEMENT city                  (#PCDATA)>
+<!ELEMENT state                 (#PCDATA)>
+<!ELEMENT zip                   (#PCDATA)>
+<!ELEMENT type                  (#PCDATA)>
+<!ELEMENT number                (#PCDATA)>
+<!ELEMENT subsection            (heading, description+)>
+<!ATTLIST subsection            extra (0|1) "0"
+                                federal (0|1) #IMPLIED>
+<!ELEMENT heading               (#PCDATA)>
+<!ELEMENT jobsubsection         (jobheader, description+)>
+<!ATTLIST jobsubsection         extra (0|1) "0"
+                                federal (0|1) #IMPLIED>
+<!ELEMENT jobheader             (title, company, daterange, location?, hours?, supervisor?, reason?, salary?)>
+<!ELEMENT title                 (#PCDATA)>
+<!ELEMENT company               (#PCDATA)>
+<!ELEMENT daterange             (from, to)>
+<!-- location, hours, supervisor, reason and salary are federal-only:
+     USAJOBS rates against them, an industry resume never shows them.  All
+     optional, so a position with nothing recorded still validates.  That
+     is the point: the 1990s employers are defunct and their pay is
+     unrecoverable.
+     location takes street? because for most of them only city and state
+     survive; salary is #PCDATA because it holds a wage, a GS grade or a
+     military pay grade depending on the job.  reason is the reason for
+     leaving, kept here because every ATS form asks for it and the answer
+     should be the same each time; it is worded for the form, not the
+     interview.
+     supervisor/title is the supervisor's job title, which state civil
+     service forms require alongside the name; it reuses the global title
+     element. -->
+<!ELEMENT location              (street?, city, state, zip?)>
+<!ELEMENT salary                (#PCDATA)>
+<!ELEMENT hours                 (#PCDATA)>
+<!ELEMENT supervisor            (name, title?, number?)>
+<!ATTLIST supervisor            maycontact (yes|no) #IMPLIED>
+<!ELEMENT reason                (#PCDATA)>
+<!ELEMENT from                  (#PCDATA)>
+<!ELEMENT to                    (#PCDATA)>
+<!ENTITY  % text                "#PCDATA | list | command | server | acronym | emph | abbrev">
+<!ELEMENT description           (%text; | extra)*>
+<!ELEMENT extra                 (%text;)*>
+<!ELEMENT list                  (item+)>
+<!ELEMENT item                  (%text; | extra)*>
+<!ELEMENT abbrev                (word, defn)>
+<!ELEMENT word                  (#PCDATA)>
+<!ELEMENT defn                  (#PCDATA)>
+<!ELEMENT command               (#PCDATA)>
+<!ELEMENT server                (#PCDATA)>
+<!ELEMENT acronym               (#PCDATA)>
+<!ELEMENT emph                  (#PCDATA)>

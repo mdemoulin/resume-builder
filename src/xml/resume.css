@@ -1,0 +1,52 @@
+/* resume.css
+   Copyright (C) 2026 Michael A. Demoulin
+   SPDX-License-Identifier: GPL-3.0-or-later */
+resume					{
+							font-family: sans-serif;
+							margin: 2ex;
+							text-align:justify;
+							}
+name 					{
+							font-weight: bold;
+							font-size: large;
+							display: block;
+							text-align: center;
+							}
+address, email, phone	{
+							display: list-item;
+							left-padding: 2ex;
+							}
+email					{	font-family: monospace; }
+type:after				{	content: ": "; }
+section > heading		{
+							font-weight: bold;
+							font-size: large;
+							text-align: center;
+							display: block;
+							}
+subsection > heading	{
+							font-size: large;
+							text-align: center;
+							display: block;
+							}
+/*
+	jobheader
+		title
+		company
+		daterange
+			from
+			to
+*/
+jobheader				{
+							font-size: large;
+							display: block;
+							}
+from:after				{ content: " - "; }
+/*
+title, company			{
+							margin: 2ex;
+							}
+description				{
+							display: block;
+						}
+*/

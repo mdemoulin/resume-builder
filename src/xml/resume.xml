@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="resume.css" type="text/css"?>
+<!DOCTYPE resume SYSTEM "resume.dtd">
+<!--
+    A sample resume for a fictional person.  Every name, employer, address
+    and phone number in it is made up; the 555-01xx numbers are reserved for
+    fiction.  It exists to exercise every element and switch the DTD
+    defines, so each build setting has something to show:
+
+        extra="1"      a whole position shown only with "make extra"
+        <extra>        inline detail shown only with "make extra"
+        federal="1"    shown only in the federal (USAJOBS) build
+        federal="0"    left out of the federal build
+        <abbrev>       spelled out with "make expandabbrevs"
+        two <phone>s   both listed with "make twophones"
+
+    Replace it with your own; "make validate" checks it against the DTD.
+-->
+<resume>
+    <author>
+        <name>JORDAN Q. SAMPLE</name>
+        <address>
+            <!-- street and zip are optional: city and state are what an
+                 employer filters on -->
+            <city>Springfield</city>
+            <state>IL</state>
+            </address>
+        <email>jordan.sample@example.com</email>
+        <!-- with "make twophones" the PDF labels the first number Home and
+             the second Cell; the other formats use <type> -->
+        <phone><type>home</type><number>217-555-0178</number></phone>
+        <phone><type>cell</type><number>217-555-0142</number></phone>
+        </author>
+
+    <section>
+        <heading>SKILLS</heading>
+        <subsection>
+            <heading>Languages</heading>
+            <description>
+                Very skilled with Python, with 12 years' experience.
+                Skilled with <acronym>SQL</acronym> (PostgreSQL and SQLite)<extra>, with 10 years' experience</extra>.
+                Experienced with shell programming (<command>bash</command>) and Go.
+                Familiar with C and JavaScript.
+                </description>
+            </subsection>
+        <subsection>
+            <heading>Systems</heading>
+            <description>
+                Skilled with Linux system administration, including
+                    <command>systemd</command>, <command>cron</command>,
+                    <command>rsync</command>, and <command>ssh</command>.
+                Experienced with
+                    <abbrev><word>CI</word><defn>Continuous Integration</defn></abbrev>
+                    pipelines and
+                    <abbrev><word>REST</word><defn>Representational State Transfer</defn></abbrev>
+                    <acronym>API</acronym> design.
+                </description>
+            </subsection>
+        <!-- extra="1": only in the long build -->
+        <subsection extra="1">
+            <heading>Methodologies</heading>
+            <description>
+                Comfortable with test-driven development and code review.
+                </description>
+            </subsection>
+        </section>
+
+    <section>
+        <heading>EXPERIENCE</heading>
+
+        <jobsubsection>
+            <jobheader>
+                <title>Senior Software Developer</title>
+                <company>Pelican Software Cooperative</company>
+                <daterange><from>Mar 2019</from><to>present</to></daterange>
+                <!-- location, hours, supervisor, reason and salary appear
+                     only in the federal build -->
+                <location><street>100 Example Plaza</street><city>Springfield</city><state>IL</state><zip>62701</zip></location>
+                <hours>40</hours>
+                <supervisor maycontact="yes"><name>Casey Example</name><title>Engineering Manager</title><number>217-555-0110</number></supervisor>
+                <reason>Seeking a larger team</reason>
+                <salary>95000</salary>
+                </jobheader>
+            <description>
+                Lead developer for the cooperative's order-tracking service,
+                    a Python web application on PostgreSQL.
+                Designed its public <acronym>API</acronym> and wrote the
+                    client library that member shops use to call it.
+                <extra>Cut the nightly reconciliation job from forty minutes
+                    to four by replacing row-at-a-time updates with set-based
+                    <acronym>SQL</acronym>.</extra>
+                Maintain the deployment on two servers,
+                    <server>pelican-app1</server> and <server>pelican-db1</server>:
+                <list>
+                    <item>automated builds and tests on every commit;</item>
+                    <item>nightly backups, with a restore tested <emph>monthly</emph>;</item>
+                    <item>monitoring and alerting<extra>, with an on-call rotation of three</extra>.</item>
+                    </list>
+                </description>
+            </jobsubsection>
+
+        <jobsubsection>
+            <jobheader>
+                <title>Systems Administrator</title>
+                <company>Bluebonnet Logistics</company>
+                <daterange><from>Jun 2014</from><to>Feb 2019</to></daterange>
+                <location><city>Peoria</city><state>IL</state></location>
+                <hours>40</hours>
+                <supervisor maycontact="no"><name>Riley Placeholder</name><title>IT Director</title></supervisor>
+                <reason>Company was acquired</reason>
+                </jobheader>
+            <description>
+                Ran the Linux servers behind a fleet-dispatch system.
+                Wrote the <command>bash</command> and Python tooling that
+                    provisioned new depots in an afternoon instead of a week.
+                </description>
+            </jobsubsection>
+
+        <!-- extra="1": an older position only the long build includes -->
+        <jobsubsection extra="1">
+            <jobheader>
+                <title>Help Desk Technician</title>
+                <company>Springfield Public Library</company>
+                <daterange><from>Aug 2011</from><to>May 2014</to></daterange>
+                </jobheader>
+            <description>
+                Supported staff and public computers across three branches.
+                </description>
+            </jobsubsection>
+        </section>
+
+    <!-- federal="0": left out of the federal build -->
+    <section federal="0">
+        <heading>PROJECTS</heading>
+        <description>
+            Maintain a small open-source tool that converts library catalog
+                records between <acronym>MARC</acronym> and
+                <acronym>JSON</acronym>.
+            </description>
+        </section>
+
+    <!-- federal="1": only in the federal build -->
+    <section federal="1">
+        <heading>ADDITIONAL INFORMATION</heading>
+        <description>
+            U.S. citizen.  Available for full-time work.
+            </description>
+        </section>
+
+    <section>
+        <heading>EDUCATION</heading>
+        <subsection>
+            <heading>Formal</heading>
+            <description>
+                Bachelor of Science in Computer Science from Example State
+                    University, 2011.
+                </description>
+            </subsection>
+        </section>
+</resume>
